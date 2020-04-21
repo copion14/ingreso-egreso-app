@@ -22,6 +22,10 @@ const _authreducer = createReducer(initialState,
     };
   }),
 
+  on(fromAuth.unset_user, (state) => {
+    return { user: null }
+  }),
+
 
 
 );

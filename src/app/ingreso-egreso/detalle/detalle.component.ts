@@ -1,4 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { appState } from 'src/app/app.reducers';
+import { IngresoEgreso } from '../ingreso-egreso.model';
+import { Subscription } from 'rxjs';
+import { IngresoEgresoService } from '../ingreso-egreso.service';
+import Swal from 'sweetalert2'
 
 @Component({
   selector: 'app-detalle',
@@ -7,9 +13,42 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DetalleComponent implements OnInit {
 
-  constructor() { }
+  items: IngresoEgreso[]
+  subscription: Subscription = new Subscription();
+  constructor(
+    private store: Store<appState>,
+    private IngresoEgresoService: IngresoEgresoService
+  ) { }
 
   ngOnInit(): void {
+    this.subscription = this.store.select('ingresoEgreso').subscribe(ingresoEgreso => {
+      this.items = ingresoEgreso.items;
+    })
   }
+  borrarItem(uid: string) {
+    this.IngresoEgresoService
+      .borrarIngresoEgreso(uid)
+      .then(() => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Borrado',
+          text: 'item borrado exitosamente',
+        })
+      }).catch(error => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: error.message,
+        })
+      })
+
+
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe()
+
+  }
+
 
 }

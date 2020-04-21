@@ -11,6 +11,7 @@ import { appState } from '../app.reducers';
 import * as fromUiActions from '../shared/ui.actions';
 import * as fromAuthActions from './auth.actions';
 import { Subscription } from 'rxjs';
+import { IngresoEgresoService } from '../ingreso-egreso/ingreso-egreso.service';
 
 @Injectable({
   providedIn: 'root'
@@ -18,12 +19,14 @@ import { Subscription } from 'rxjs';
 export class AuthService {
 
   private subscriptionFirebase: Subscription = new Subscription();
+  private usuario: User;
+
 
   constructor(
     private angularFireAuth: AngularFireAuth,
     private router: Router,
     private angularFireStore: AngularFirestore,
-    private store: Store<appState>
+    private store: Store<appState>,
   ) { }
 
   initAuthListener() {
@@ -33,8 +36,10 @@ export class AuthService {
           .subscribe((userObj: any) => {
             const user = new User(userObj);
             this.store.dispatch(fromAuthActions.set_user({ user }));
+            this.usuario = user;
           });
       } else {
+        this.usuario = null
         this.subscriptionFirebase.unsubscribe();
       }
     });
@@ -97,11 +102,7 @@ export class AuthService {
   logout() {
     this.router.navigate(['/login']);
     this.angularFireAuth.auth.signOut()
-      .then(resp => {
-
-      }).catch(error => {
-
-      });
+    this.store.dispatch(fromAuthActions.unset_user());
   }
   isAuth() {
     return this.angularFireAuth.authState.pipe(
@@ -112,5 +113,9 @@ export class AuthService {
         return fbUser != null
       })
     )
+  }
+
+  getUser() {
+    return {...this.usuario};
   }
 }
