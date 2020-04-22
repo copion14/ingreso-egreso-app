@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs';
 import { IngresoEgreso } from '../ingreso-egreso.model';
 import { Label, MultiDataSet } from 'ng2-charts';
 import { ChartType, ChartOptions } from 'chart.js';
+import { AppStateExtension } from '../ingreso-egreso.reducer';
 
 @Component({
   selector: 'app-estadistica',
@@ -46,7 +47,7 @@ export class EstadisticaComponent implements OnInit {
 
 
   constructor(
-    private store: Store<appState>
+    private store: Store<AppStateExtension>
   ) { }
 
   ngOnInit(): void {

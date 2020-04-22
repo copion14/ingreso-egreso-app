@@ -4,9 +4,9 @@ import { IngresoEgreso } from './ingreso-egreso.model';
 import { IngresoEgresoService } from './ingreso-egreso.service';
 import Swal from 'sweetalert2'
 import { Store } from '@ngrx/store';
-import { appState } from '../app.reducers';
 import { Subscription } from 'rxjs';
 import * as fromUi from '../shared/ui.actions'
+import { AppStateExtension } from './ingreso-egreso.reducer';
 @Component({
   selector: 'app-ingreso-egreso',
   templateUrl: './ingreso-egreso.component.html',
@@ -20,7 +20,7 @@ export class IngresoEgresoComponent implements OnInit {
   loadingSubs: Subscription = new Subscription();
 
   constructor(public IngresoEgresoService: IngresoEgresoService
-    , private store: Store<appState>) { }
+    , private store: Store<AppStateExtension>) { }
 
   ngOnInit(): void {
     this.forma = new FormGroup({
